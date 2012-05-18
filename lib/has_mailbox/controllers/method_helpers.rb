@@ -42,10 +42,10 @@ module HasMailbox
         def new
         end
 
-        def create123
+        def create
           unless params[:user_tokens].blank? or params[:subject].blank? or params[:body].blank?
-            recipients = #{user_class_name}.find(params[:user_tokens].split(",").collect { |id| id.to_i })
-            if #{mapping[:user_object_name]}.send_message?(params[:subject],params[:body],*recipients)
+            @recipients = #{user_class_name}.find(:first, :conditions => ["name = ?", params[:user_tokens]])
+            if #{mapping[:user_object_name]}.send_message?(params[:subject],params[:body],@recipients)
               redirect_to mailboxes_url, :notice => 'Successfully send message.'
             else
               flash[:alert] = "Unable to send message."
