@@ -7,7 +7,7 @@ module HasMailbox
 
         if mapping.empty?
           mapping[:user_object_name] = "current_user"
-          mapping[:user_display_attribute] = "email"
+          mapping[:user_display_attribute] = "name"
         end
 
         class_eval <<-METHODS, __FILE__, __LINE__ + 1
