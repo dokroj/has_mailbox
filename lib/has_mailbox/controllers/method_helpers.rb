@@ -42,7 +42,7 @@ module HasMailbox
         def new
         end
 
-        def create
+        def create123
           unless params[:user_tokens].blank? or params[:subject].blank? or params[:body].blank?
             recipients = #{user_class_name}.find(params[:user_tokens].split(",").collect { |id| id.to_i })
             if #{mapping[:user_object_name]}.send_message?(params[:subject],params[:body],*recipients)
