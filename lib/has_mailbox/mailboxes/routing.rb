@@ -1,6 +1,6 @@
 module ActionDispatch::Routing
 
-  class Mapper1
+  class Mapper
 
     def mailboxes_for(user_class_name,mapping = {})
 
