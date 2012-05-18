@@ -1,4 +1,4 @@
-= has_mailbox
+= 123
 
 If you like to add messaging functionality between the users in your rails app, use this gem!
 this gem also provide standard mailbox/messagebox interface allowing each users have their own inbox, outbox and trash.
