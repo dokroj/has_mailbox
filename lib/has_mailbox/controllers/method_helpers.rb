@@ -77,7 +77,7 @@ module HasMailbox
 
             def token
               query = "%" + params[:q] + "%"
-              recipients = #{user_class_name}.select("id,#{mapping[:user_display_attribute]}").where("#{mapping[:user_display_attribute]} like ?", query)
+              recipients = #{user_class_name}.select("name,#{mapping[:user_display_attribute]}").where("#{mapping[:user_display_attribute]} like ?", query)
                 respond_to do |format|
                 format.json { render :json => recipients.map { |u| { "id" => u.id, "name" => u.#{mapping[:user_display_attribute]}} } }
                 end
