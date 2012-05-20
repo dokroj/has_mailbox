@@ -16,11 +16,12 @@ module HasMailbox
           @mailbox = params[:mailbox].blank? ? "inbox" : params[:mailbox]
           @messages = #{mapping[:user_object_name]}.send(@mailbox).paginate(:page => params[:page], :per_page => 10)
         if @mailbox == "inbox"
-            @options = ["Read","Unread","Delete"]
+            @options = ["Przeczytany","Nieprzeczytany","Skasuj"]
           elsif @mailbox == "outbox"
-            @options = ["Delete"]
+            @options = ["Skasuj"]
           elsif @mailbox == "trash"
-            @options = ["Read","Unread","Delete","Undelete"]	
+            @mUndelete = I18n.t 'mUndelete'
+            @options = ["Przyczytany","Nieprzeczytany","Skasuj",@mUndelete]
           end
         end
 
@@ -31,10 +32,12 @@ module HasMailbox
             message_created_at = @message.created_at.strftime('%A, %B %d, %Y at %I:%M %p')
           unless params[:mailbox] == "outbox"
               read_unread_messages(true,@message)
-              @message_description = "On " + message_created_at +" <span class='recipient_name'>" + message_from + "</span> wrote :"
+              @mNapisal = I18n.t 'mNapisal'
+              @message_description = message_created_at +" <span class='recipient_name'>" + message_from + "</span> "+@mNapisal
               @user_tokens = @message.from.id
             else
-              @message_description = "You wrote to <span class='recipient_name'>" + message_from + "</span> at " + message_created_at + " :"
+              @mWyslales = I18n.t 'mWyslales'
+              @message_description = @mWyslales + "<span class='recipient_name'>" + message_from + " </span>" + message_created_at + " :"
             end
           end
         end
@@ -44,17 +47,20 @@ module HasMailbox
 
         def create
           unless params[:user_tokens].blank? or params[:subject].blank? or params[:body].blank?
+            @mWyslano = I18n.t 'mWyslano'
             @recipients = #{user_class_name}.find(:first, :conditions => ["name = ?", params[:user_tokens]])
             if #{mapping[:user_object_name]}.send_message?(params[:subject],params[:body],@recipients)
-              redirect_to mailboxes_url, :notice => 'Successfully send message.'
+              redirect_to mailboxes_url, :notice => @mWyslano
             else
-              flash[:alert] = "Unable to send message."
+              @mNiewyslano = I18n.t 'mNiewyslano'
+              flash[:alert] = @mNiewyslano
               render :action => "new"
             end
           else
-            flash[:alert] = "Invalid input for sending message."
+            @mPustepole = I18n.t 'mPustepole'
+            flash[:alert] = @mPustepole
             render :action => "new"
-          end	
+          end  
         end
 
             def update
